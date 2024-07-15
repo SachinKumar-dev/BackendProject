@@ -1,0 +1,12 @@
+{
+  "name": "backendpractice",
+  "version": "1.0.0",
+  "description": "Simple backend project.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
