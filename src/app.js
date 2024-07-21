@@ -2,7 +2,6 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
-
 const app=express();
 
 //use for middleware
@@ -23,5 +22,18 @@ app.use(express.static("public"));
 
 //crud on cookies
 app.use(cookieParser());
+
+
+//routes
+import userRouter from './routes/user.routes.js'
+
+//routes.declaration
+//cant use app.get directly as routes are coming from different file, use app.use(middleware)
+//api versioning
+app.use("/api/v1/users",userRouter);
+
+//http://localhost:8000/api/v1/users/register
+//http://localhost:8000/api/v1/users/login
+
 
 export {app};
