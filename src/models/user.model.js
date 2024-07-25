@@ -1,8 +1,8 @@
-import mongoose, {Schema,Model} from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const userSchema = new Schema({
+const userSchema = mongoose.Schema({
 
  userName:{
     type:String,
@@ -30,14 +30,15 @@ const userSchema = new Schema({
 
  avatar:{
     type:String, //cloudinary url
-    required:true,
+    required:false,
     unique:true,
     lowercase:true,
     trim:true,
  },
 
  coverImage:{
-    type:String, //cloudinary url
+    type:String,
+    required:false  //cloudinary url
  },
 
  watchHistory:[
@@ -64,7 +65,7 @@ const userSchema = new Schema({
 userSchema.pre("save",async function(next){
     //ensure not to encrypt the pass everytime on save of existing user details
     if(this.isModified("password")){
-        this.password = bcrypt.hash(this.password,10)
+        this.password = await bcrypt.hash(this.password,10)
         next();
     }
     else{
@@ -116,4 +117,4 @@ userSchema.methods.generateRefreshToken=function(){
 }
 
 
-export const userModel = new Model('User',userSchema);
+export const User =  mongoose.model('User',userSchema);

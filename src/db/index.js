@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 //db connection is achieved by mongoose only
 import {DB_NAME} from '../constants.js';
-//require('dotenv').config({path:'./env'})
 
 
 const connectionDB = async () =>{

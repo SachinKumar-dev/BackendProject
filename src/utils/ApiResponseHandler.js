@@ -1,4 +1,4 @@
-class ResponseErrorHandler {
+class ApiResponseHandler {
     constructor(
         statusCode,data,message='Success'
     ){
@@ -10,3 +10,5 @@ class ResponseErrorHandler {
 
     }
 }
+
+export {ApiResponseHandler}
