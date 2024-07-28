@@ -58,7 +58,7 @@ const userSchema = mongoose.Schema({
  },
 
 },{
-    timeStamps:true
+    timestamps:true
 })
 
 //pre hooks , uses async for computations and next flag takes and passes to next for usage
@@ -112,7 +112,6 @@ userSchema.methods.generateRefreshToken=function(){
     {
         expiresIn:process.env.REFRESH_TOKEN_EXPIRY
     }
-
 )
 }
 
