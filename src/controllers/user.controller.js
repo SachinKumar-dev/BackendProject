@@ -4,6 +4,7 @@ import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponseHandler } from "../utils/ApiResponseHandler.js";
 import jwt from "jsonwebtoken";
+
 //methods
 const generateAccessAndRefreshToken=async(userId)=>{
     try {
@@ -227,6 +228,118 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
 })
 
+//change password
+const changeCurrentPassword=asyncHandler(async(req,res)=>{
+    const {oldPassword,newPassword}=req.body;
+
+    const user=await User.findById(req.user?._id);
+    const isPasswordValid=await user.isPasswordValid(oldPassword);
+
+    if(!isPasswordValid){
+        throw new ApiErrorHandler(400,"Invalid old password!")
+    }
+
+    user.password=newPassword;
+    await user.save({validateBeforeSave:false})
+
+    return res.status(200)
+    .josn(new ApiResponseHandler(200,{},"Password changed successfully!"))
+})
+
+//get current user
+const getCurrentUser=asyncHandler(async(req,res)=>{
+   return res
+    .status(200)
+    .json(200,req.user,"Current user fetched successfully!")
+})
+
+//update user's data
+const updateUserData=asyncHandler(async(req,res)=>{
+    const{fullName,email}=req.body;
+    if(!fullName || !email){
+        throw new ApiErrorHandler(404,"Data not found!");
+    }
+    const user=await User.findByIdAndUpdate(req.user._id,{
+        $set:{
+            fullName,email
+        }
+    },
+    {new:true}
+    ).select("-password");
+
+return res
+.status
+.json(new ApiResponseHandler(200,user,"Details updated successfully!"));
+})
+
+//update avatar
+const updateAvatar=asyncHandler(async(req,res)=>{
+    //use multer to take file here
+    const avatarLocalPath=req.file?.avatar[0].path;
+    if(!avatarLocalPath){
+        throw new ApiErrorHandler(404,"Avatar is missing!")
+    }
+    const avatar=await uploadOnCloudinary(avatarLocalPath);
+    //cloudinary returns obj so need to extract the url out of it
+    console.log(`avatar is ${avatar}`);
+    if(!avatar.url){
+        throw new ApiErrorHandler(400,"Error while uploading the avatar!")
+    }
+
+    //update the url simply
+    const user=await User.findByIdAndUpdate(req.user?._id,{
+        $set:{
+            avatar:avatar.url
+        }
+    },
+    {new:true}
+    ).select("-password");
+
+return res
+.status
+.json(new ApiResponseHandler(200,user,"Avatar updated successfully!"));
+
+})
+
+//update coverImage
+const updateCoverImage=asyncHandler(async(req,res)=>{
+    //use multer to take file here
+    const coverImageLocalPath=req.file?.coverImage[0].path;
+    if(!coverImageLocalPath){
+        throw new ApiErrorHandler(404,"Cover image is missing!")
+    }
+    const coverImage=await uploadOnCloudinary(avatarLocalPath);
+    //cloudinary returns obj so need to extract the url out of it
+    console.log(`coverImage is ${coverImage}`);
+    if(!coverImage.url){
+        throw new ApiErrorHandler(400,"Error while uploading the cover image!")
+    }
+
+    //update the url simply
+    const user=await User.findByIdAndUpdate(req.user?._id,{
+        $set:{
+            coverImage:coverImage.url
+        }
+    },
+    {new:true}
+    ).select("-password");
+
+return res
+.status
+.json(new ApiResponseHandler(200,user,"Cover image updated successfully!"));
+
+})
 
 
-export { registerUser,loginUser,logoutUser,refreshAccessToken };
+export 
+{
+     registerUser,
+     loginUser,
+     logoutUser,
+     refreshAccessToken,
+     changeCurrentPassword , 
+     getCurrentUser,
+     updateUserData,
+     updateAvatar,
+     updateCoverImage
+};

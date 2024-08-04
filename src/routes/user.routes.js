@@ -3,7 +3,6 @@ import { registerUser, loginUser,logoutUser,refreshAccessToken } from "../contro
 import {upload} from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
-
 const router = Router()
 
 //adding route and fun that will execute at this route

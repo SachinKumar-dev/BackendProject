@@ -32,11 +32,6 @@ const videoSchema = new Schema({
         default:0
     },
 
-    thumbNail:{
-        type:String,
-        required:true
-    },
-
     isPublished:{
         type:Boolean,
         default:true
